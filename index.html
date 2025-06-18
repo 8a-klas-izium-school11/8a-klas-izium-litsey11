@@ -217,12 +217,154 @@
     .theme-toggle:hover {
       background-color: #003a75;
     }
+
+    /* Календар */
+    #calendar-controls {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    #calendar {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    #calendar th, #calendar td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      vertical-align: top;
+      height: 80px;
+      overflow-wrap: break-word;
+      cursor: default;
+    }
+    #calendar td.birthday {
+      background-color: #ffd500;
+      font-weight: bold;
+      color: #005bbb;
+      position: relative;
+    }
+    #calendar td.birthday:hover {
+      background-color: #ffec99;
+    }
   </style>
   <script>
     function openTab(tabName) {
       const tabs = document.querySelectorAll('.tab-content');
       tabs.forEach(tab => tab.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
+    }
+
+    // Дані днів народжень (місяць - 0, день) з іменами без по-батькові
+    const birthdays = {
+      '0-2': ['Таїсія Копєйкіна'],
+      '0-26': ['Захар Любенко'],
+      '0-18': ['Ярослав Загнойко'],
+      '1-20': ['Аліса Єременко'],
+      '2-3': ['Микита Кладко'],
+      '3-19': ['Анна Дігтяр'],
+      '3-20': ['Єлизавета Маяцька'],
+      '4-6': ['Валерія Кіндер'],
+      '5-2': ['Дмитро Вітренко', 'Владислав Гур\'янов'],
+      '5-11': ['Лев Півторак'],
+      '6-2': ['Гліб Чуденко'],
+      '6-4': ['Валентин Коловоротний'],
+      '6-5': ['Вікторія Плювака'],
+      '6-20': ['Дмитро Прокудін'],
+      '6-30': ['Марина Яценко'],
+      '7-25': ['Тимур Соляник'],
+      '7-29': ['Віолета Малик'],
+      '8-8': ['Аліна Д\'яченко', 'Андрій Д\'яченко', 'Єлизавета Філатова'],
+      '9-8': ['Азалія Гребенюк'],
+      '9-27': ['Крістіна Немирич'],
+      '10-11': ['Ангеліна Швидченко'],
+      '10-30': ['Ростислав Бубловський'],
+      '11-27': ['Єгор Бурма']
+    };
+
+    let currentYear, currentMonth;
+
+    function renderCalendar(year, month) {
+      const calendarBody = document.getElementById('calendar-body');
+      calendarBody.innerHTML = '';
+
+      const monthYear = document.getElementById('month-year');
+      const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+      monthYear.textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const firstWeekDay = firstDay.getDay(); // 0 - неділя, 1 - понеділок і тд
+      const daysInMonth = lastDay.getDate();
+
+      let row = document.createElement('tr');
+      // Заповнюємо пусті дні до початку місяця
+      for(let i=0; i<firstWeekDay; i++) {
+        const emptyCell = document.createElement('td');
+        row.appendChild(emptyCell);
+      }
+
+      for(let day=1; day <= daysInMonth; day++) {
+        if(row.children.length === 7) {
+          calendarBody.appendChild(row);
+          row = document.createElement('tr');
+        }
+
+        const cell = document.createElement('td');
+        const key = `${month}-${day}`;
+        if(birthdays[key]) {
+          cell.classList.add('birthday');
+          // Виводимо номер дня і імена в цьому дні
+          cell.innerHTML = `<strong>${day}</strong><br>${birthdays[key].join('<br>')}`;
+          cell.title = birthdays[key].join(', ');
+        } else {
+          cell.textContent = day;
+        }
+
+        row.appendChild(cell);
+      }
+
+      // Заповнюємо пусті клітинки наприкінці місяця
+      while(row.children.length < 7) {
+        const emptyCell = document.createElement('td');
+        row.appendChild(emptyCell);
+      }
+      calendarBody.appendChild(row);
+    }
+
+    function showBirthdaysForMonth(month) {
+      const info = document.getElementById('birthday-info');
+      let people = [];
+      for(let key in birthdays) {
+        if(key.startsWith(month + '-')) {
+          people = people.concat(birthdays[key]);
+        }
+      }
+      if(people.length === 0) {
+        info.textContent = 'У цьому місяці днів народжень немає.';
+      } else {
+        info.textContent = `У цьому місяці святкують: ${people.join(', ')}`;
+      }
+    }
+
+    function prevMonth() {
+      if(currentMonth === 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else {
+        currentMonth--;
+      }
+      renderCalendar(currentYear, currentMonth);
+      showBirthdaysForMonth(currentMonth);
+    }
+
+    function nextMonth() {
+      if(currentMonth === 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else {
+        currentMonth++;
+      }
+      renderCalendar(currentYear, currentMonth);
+      showBirthdaysForMonth(currentMonth);
     }
 
     window.onload = () => {
@@ -253,19 +395,27 @@
           localStorage.setItem('theme', 'light');
         }
       }
+
+      // Ініціалізація календаря
+      const today = new Date();
+      currentYear = today.getFullYear();
+      currentMonth = today.getMonth();
+      renderCalendar(currentYear, currentMonth);
+      showBirthdaysForMonth(currentMonth);
+
+      document.getElementById('prev-month').addEventListener('click', prevMonth);
+      document.getElementById('next-month').addEventListener('click', nextMonth);
     };
 
     function toggleTheme() {
       const body = document.body;
       const btn = document.querySelector('.theme-toggle');
       if (body.classList.contains('dark-theme')) {
-        // переключити на світлу
         body.classList.remove('dark-theme');
         body.classList.add('light-theme');
         btn.textContent = '🌙 Темна тема';
         localStorage.setItem('theme', 'light');
       } else {
-        // переключити на темну
         body.classList.remove('light-theme');
         body.classList.add('dark-theme');
         btn.textContent = '☀️ Світла тема';
@@ -286,8 +436,8 @@
     <a onclick="openTab('news')">НОВИНИ КЛАСУ</a>
     <a onclick="openTab('schedule')">РОЗКЛАД</a>
     <a onclick="openTab('teachers')">ВЧИТЕЛІ</a>
-    <a onclick="openTab('birthdays')">ДНІ НАРОДЖЕННЯ</a>
     <a onclick="openTab('students')">УЧНІ КЛАСУ</a>
+    <a onclick="openTab('birthday-calendar')">КАЛЕНДАР ДНІВ НАРОДЖЕНЬ</a>
     <a onclick="openTab('contact')">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
   </nav>
 
@@ -316,45 +466,6 @@
       </article>
     </section>
 
-    <section id="birthdays" class="tab-content">
-      <article>
-        <h2>Дні народження учнів</h2>
-        <ul>
-          <li><strong>Мазур Альона Миколаївна</strong> - 26 лютого</li>
-          <li><strong>Бубловський Ростислав Максимович</strong> - 30 листопада</li>
-          <li><strong>Бурма Єгор Олегович</strong> - 27 грудня</li>
-          <li><strong>Васильєва Анастасія Максимівна</strong> - 8 листопада</li>
-          <li><strong>Вітренко Дмитро Олександрович</strong> - 2 червня</li>
-          <li><strong>Гребенюк Азалія Сергіївна</strong> - 8 жовтня</li>
-          <li><strong>Гур'янов Владислав Євгенійович</strong> - 2 червня</li>
-          <li><strong>Дермен Мілана Максимівна</strong> - 29 липня</li>
-          <li><strong>Дігтяр Анна Сергіївна</strong> - 19 квітня</li>
-          <li><strong>Д'яченко Аліна Олександрівна</strong> - 8 вересня</li>
-          <li><strong>Д'яченко Андрій Олександрович</strong> - 8 вересня</li>
-          <li><strong>Єременко Аліса Сергіївна</strong> - 20 лютого</li>
-          <li><strong>Загнойко Ярослав Олександрович</strong> - 18 січня</li>
-          <li><strong>Кіндер Валерія Олександрівна</strong> - 6 травня</li>
-          <li><strong>Кладко Микита Максимович</strong> - 3 березня</li>
-          <li><strong>Коловоротний Валентин Олегович</strong> - 4 липня</li>
-          <li><strong>Копєйкіна Таїсія Андріївна</strong> - 2 січня</li>
-          <li><strong>Кучугура Демид Русланович</strong> - 27 квітня</li>
-          <li><strong>Любенко Захар Олександрович</strong> - 26 січня</li>
-          <li><strong>Малик Віолета Сергіївна</strong> - 29 серпня</li>
-          <li><strong>Маяцька Єлизавета Денисівна</strong> - 20 квітня</li>
-          <li><strong>Немирич Крістіна Віталіївна</strong> - 27 жовтня</li>
-          <li><strong>Півторак Лев Олександрович</strong> - 11 червня</li>
-          <li><strong>Плювака Вікторія Володимирівна</strong> - 5 липня</li>
-          <li><strong>Прокудін Дмитро Юрійович</strong> - 20 липня</li>
-          <li><strong>Соляник Тимур Романович</strong> - 25 серпня</li>
-          <li><strong>Філатова Єлизавета Олександрівна</strong> - 15 вересня</li>
-          <li><strong>Цокота Аліса Миколаївна</strong> - 20 вересня</li>
-          <li><strong>Чуденко Гліб Сергійович</strong> - 2 липня</li>
-          <li><strong>Швидченко Ангеліна Іванівна</strong> - 11 листопада</li>
-          <li><strong>Яценко Марина Євгенівна</strong> - 30 липня</li>
-        </ul>
-      </article>
-    </section>
-
     <section id="students" class="tab-content">
       <article>
         <h2>Учні класу</h2>
@@ -363,47 +474,58 @@
           <li>Бурма Єгор Олегович</li>
           <li>Васильєва Анастасія Максимівна</li>
           <li>Вітренко Дмитро Олександрович</li>
-          <li>Гребенюк Азалія Сергіївна</li>
           <li>Гур'янов Владислав Євгенійович</li>
-          <li>Д'яченко Аліна Олександрівна</li>
-          <li>Д'яченко Андрій Олександрович</li>
-          <li>Дермен Мілана Максимівна</li>
           <li>Дігтяр Анна Сергіївна</li>
-          <li>Єременко Аліса Сергіївна</li>
+          <li>Дяченко Аліна Олександрівна</li>
+          <li>Дяченко Андрій Олександрович</li>
+          <li>Жданова Ольга Олександрівна</li>
           <li>Загнойко Ярослав Олександрович</li>
           <li>Кіндер Валерія Олександрівна</li>
+          <li>Копєйкіна Таїсія Андріївна</li>
           <li>Кладко Микита Максимович</li>
           <li>Коловоротний Валентин Олегович</li>
-          <li>Копєйкіна Таїсія Андріївна</li>
-          <li>Кучугура Демид Русланович</li>
           <li>Любенко Захар Олександрович</li>
-          <li>Малик Віолета Сергіївна</li>
           <li>Маяцька Єлизавета Денисівна</li>
+          <li>Малик Віолета Сергіївна</li>
           <li>Немирич Крістіна Віталіївна</li>
           <li>Півторак Лев Олександрович</li>
           <li>Плювака Вікторія Володимирівна</li>
           <li>Прокудін Дмитро Юрійович</li>
           <li>Соляник Тимур Романович</li>
           <li>Філатова Єлизавета Олександрівна</li>
-          <li>Цокота Аліса Миколаївна</li>
-          <li>Чуденко Гліб Сергійович</li>
-          <li>Швидченко Ангеліна Іванівна</li>
           <li>Яценко Марина Євгенівна</li>
-          <p><em>Усього учнів у класі — 30.</em></p>
         </ul>
       </article>
     </section>
 
-<section id="contact" class="tab-content">
-  <article>
-    <h2>Зворотній зв'язок</h2>
-    <p>Telegram: <a href="https://t.me/sait_vosmogoA_klas_bot" target="_blank">@sait_vosmogoA_klas_bot</a></p>
-  </article>
-</section>
- </main>
-  
-   <footer>
-    © 2025 Сайт 7-А класу, Ізюмський ліцей №11
+    <section id="birthday-calendar" class="tab-content">
+      <h2>Календар днів народжень</h2>
+      <div id="calendar-controls">
+        <button id="prev-month" title="Попередній місяць">◀</button>
+        <span id="month-year" style="font-weight:bold; margin: 0 15px;"></span>
+        <button id="next-month" title="Наступний місяць">▶</button>
+      </div>
+      <table id="calendar" border="1" cellpadding="5" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Нд</th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th>
+          </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+      </table>
+      <div id="birthday-info" style="margin-top:10px; font-weight:bold;"></div>
+    </section>
+
+    <section id="contact" class="tab-content">
+      <article>
+        <h2>Зворотній зв'язок</h2>
+        <p>Telegram: <a href="https://t.me/sait_vosmogoA_klas_bot" target="_blank">@sait_vosmogoA_klas_bot</a></p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Сайт 7-А класу Ізюмського ліцею №11</p>
   </footer>
 </body>
 </html>
