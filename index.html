@@ -218,32 +218,62 @@
       background-color: #003a75;
     }
 
-    /* Календар */
+    /* Стилі календаря */
     #calendar-controls {
       margin-bottom: 10px;
       text-align: center;
     }
+    #calendar-controls button {
+      background-color: #005bbb;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    #calendar-controls button:hover {
+      background-color: #003a75;
+    }
+    #month-year {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
     #calendar {
       width: 100%;
       border-collapse: collapse;
-      table-layout: fixed;
+      text-align: center;
     }
     #calendar th, #calendar td {
       border: 1px solid #ccc;
       padding: 8px;
       vertical-align: top;
-      height: 80px;
-      overflow-wrap: break-word;
-      cursor: default;
+      min-width: 40px;
+      height: 60px;
+      position: relative;
+      user-select: none;
     }
     #calendar td.birthday {
-      background-color: #ffd500;
-      font-weight: bold;
-      color: #005bbb;
-      position: relative;
+      background-color: #fffae6;
+      cursor: default;
     }
     #calendar td.birthday:hover {
-      background-color: #ffec99;
+      background-color: #fff2b3;
+    }
+    #calendar td .birthday-names {
+      font-size: 0.75em;
+      margin-top: 4px;
+      color: #b35e00;
+      display: block;
+      text-align: left;
+      white-space: normal;
+    }
+    #birthday-info {
+      margin-top: 10px;
+      font-style: italic;
+      text-align: center;
     }
   </style>
   <script>
@@ -253,31 +283,36 @@
       document.getElementById(tabName).classList.add('active');
     }
 
-    // Дані днів народжень (місяць - 0, день) з іменами без по-батькові
+    // Дані днів народжень (місяць - 0, день)
     const birthdays = {
-      '0-2': ['Таїсія Копєйкіна'],
-      '0-26': ['Захар Любенко'],
-      '0-18': ['Ярослав Загнойко'],
-      '1-20': ['Аліса Єременко'],
-      '2-3': ['Микита Кладко'],
-      '3-19': ['Анна Дігтяр'],
-      '3-20': ['Єлизавета Маяцька'],
-      '4-6': ['Валерія Кіндер'],
-      '5-2': ['Дмитро Вітренко', 'Владислав Гур\'янов'],
-      '5-11': ['Лев Півторак'],
-      '6-2': ['Гліб Чуденко'],
-      '6-4': ['Валентин Коловоротний'],
-      '6-5': ['Вікторія Плювака'],
-      '6-20': ['Дмитро Прокудін'],
-      '6-30': ['Марина Яценко'],
-      '7-25': ['Тимур Соляник'],
-      '7-29': ['Віолета Малик'],
-      '8-8': ['Аліна Д\'яченко', 'Андрій Д\'яченко', 'Єлизавета Філатова'],
-      '9-8': ['Азалія Гребенюк'],
-      '9-27': ['Крістіна Немирич'],
-      '10-11': ['Ангеліна Швидченко'],
-      '10-30': ['Ростислав Бубловський'],
-      '11-27': ['Єгор Бурма']
+      '0-2': ['Копєйкіна Таїсія'],
+      '0-18': ['Загнойко Ярослав'],
+      '0-26': ['Любенко Захар'],
+      '1-20': ['Єременко Аліса', 'Мазур Альона'],
+      '2-3': ['Кладко Микита'],
+      '3-19': ['Дігтяр Анна'],
+      '3-20': ['Маяцька Єлизавета'],
+      '3-27': ['Кучугура Демид'],
+      '4-6': ['Кіндер Валерія'],
+      '5-2': ['Вітренко Дмитро', 'Гур\'янов Владислав'],
+      '5-11': ['Півторак Лев'],
+      '6-2': ['Чуденко Гліб'],
+      '6-4': ['Коловоротний Валентин'],
+      '6-5': ['Плювака Вікторія'],
+      '6-20': ['Прокудін Дмитро'],
+      '6-29': ['Дермен Мілана'],
+      '6-30': ['Яценко Марина'],
+      '7-25': ['Соляник Тимур'],
+      '7-29': ['Малик Віолета'],
+      '8-8': ['Д\'яченко Аліна', 'Д\'яченко Андрій'],
+      '8-15': ['Філатова Єлизавета'],
+      '8-20': ['Цокота Аліса'],
+      '9-8': ['Гребенюк Азалія'],
+      '9-27': ['Немирич Крістіна'],
+      '10-8': ['Васильєва Анастасія'],
+      '10-11': ['Швидченко Ангеліна'],
+      '10-30': ['Бубловський Ростислав'],
+      '11-27': ['Бурма Єгор']
     };
 
     let currentYear, currentMonth;
@@ -309,14 +344,18 @@
         }
 
         const cell = document.createElement('td');
+        cell.textContent = day;
+
+        // Позначаємо дні народження
         const key = `${month}-${day}`;
         if(birthdays[key]) {
           cell.classList.add('birthday');
-          // Виводимо номер дня і імена в цьому дні
-          cell.innerHTML = `<strong>${day}</strong><br>${birthdays[key].join('<br>')}`;
+          // Додаємо імена у клітинку під числом
+          const namesList = document.createElement('span');
+          namesList.classList.add('birthday-names');
+          namesList.textContent = birthdays[key].join(', ');
+          cell.appendChild(namesList);
           cell.title = birthdays[key].join(', ');
-        } else {
-          cell.textContent = day;
         }
 
         row.appendChild(cell);
@@ -328,6 +367,8 @@
         row.appendChild(emptyCell);
       }
       calendarBody.appendChild(row);
+
+      showBirthdaysForMonth(month);
     }
 
     function showBirthdaysForMonth(month) {
@@ -345,31 +386,11 @@
       }
     }
 
-    function prevMonth() {
-      if(currentMonth === 0) {
-        currentMonth = 11;
-        currentYear--;
-      } else {
-        currentMonth--;
-      }
-      renderCalendar(currentYear, currentMonth);
-      showBirthdaysForMonth(currentMonth);
-    }
-
-    function nextMonth() {
-      if(currentMonth === 11) {
-        currentMonth = 0;
-        currentYear++;
-      } else {
-        currentMonth++;
-      }
-      renderCalendar(currentYear, currentMonth);
-      showBirthdaysForMonth(currentMonth);
-    }
-
     window.onload = () => {
+      // Відкриваємо вкладку новин за замовчуванням
       openTab('news');
 
+      // Тема
       const btn = document.querySelector('.theme-toggle');
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme) {
@@ -396,15 +417,29 @@
         }
       }
 
-      // Ініціалізація календаря
+      // Календар - ініціалізація
       const today = new Date();
       currentYear = today.getFullYear();
       currentMonth = today.getMonth();
       renderCalendar(currentYear, currentMonth);
-      showBirthdaysForMonth(currentMonth);
 
-      document.getElementById('prev-month').addEventListener('click', prevMonth);
-      document.getElementById('next-month').addEventListener('click', nextMonth);
+      // Додаємо слухачі на кнопки календаря
+      document.getElementById('prev-month').addEventListener('click', () => {
+        currentMonth--;
+        if(currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        renderCalendar(currentYear, currentMonth);
+      });
+      document.getElementById('next-month').addEventListener('click', () => {
+        currentMonth++;
+        if(currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        renderCalendar(currentYear, currentMonth);
+      });
     };
 
     function toggleTheme() {
@@ -436,8 +471,8 @@
     <a onclick="openTab('news')">НОВИНИ КЛАСУ</a>
     <a onclick="openTab('schedule')">РОЗКЛАД</a>
     <a onclick="openTab('teachers')">ВЧИТЕЛІ</a>
-    <a onclick="openTab('students')">УЧНІ КЛАСУ</a>
     <a onclick="openTab('birthday-calendar')">КАЛЕНДАР ДНІВ НАРОДЖЕНЬ</a>
+    <a onclick="openTab('students')">УЧНІ КЛАСУ</a>
     <a onclick="openTab('contact')">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
   </nav>
 
@@ -454,47 +489,14 @@
     <section id="schedule" class="tab-content">
       <article>
         <h2>Розклад уроків</h2>
-        <p>На даний час літніх канікул розкладу нема.</p>
+        <p>Тут буде розклад уроків.</p>
       </article>
     </section>
 
     <section id="teachers" class="tab-content">
       <article class="teacher-info">
-        <h2>Вчителі</h2>
-        <p>Мазур Альона Миколаївна - класний керівник</p>
-        <p><em>(На даний час літніх канікул невідомо, хто ще стане вчителем у нашому класі)</em></p>
-      </article>
-    </section>
-
-    <section id="students" class="tab-content">
-      <article>
-        <h2>Учні класу</h2>
-        <ul>
-          <li>Бубловський Ростислав Максимович</li>
-          <li>Бурма Єгор Олегович</li>
-          <li>Васильєва Анастасія Максимівна</li>
-          <li>Вітренко Дмитро Олександрович</li>
-          <li>Гур'янов Владислав Євгенійович</li>
-          <li>Дігтяр Анна Сергіївна</li>
-          <li>Дяченко Аліна Олександрівна</li>
-          <li>Дяченко Андрій Олександрович</li>
-          <li>Жданова Ольга Олександрівна</li>
-          <li>Загнойко Ярослав Олександрович</li>
-          <li>Кіндер Валерія Олександрівна</li>
-          <li>Копєйкіна Таїсія Андріївна</li>
-          <li>Кладко Микита Максимович</li>
-          <li>Коловоротний Валентин Олегович</li>
-          <li>Любенко Захар Олександрович</li>
-          <li>Маяцька Єлизавета Денисівна</li>
-          <li>Малик Віолета Сергіївна</li>
-          <li>Немирич Крістіна Віталіївна</li>
-          <li>Півторак Лев Олександрович</li>
-          <li>Плювака Вікторія Володимирівна</li>
-          <li>Прокудін Дмитро Юрійович</li>
-          <li>Соляник Тимур Романович</li>
-          <li>Філатова Єлизавета Олександрівна</li>
-          <li>Яценко Марина Євгенівна</li>
-        </ul>
+        <h2>Наші вчителі</h2>
+        <p>Інформація про вчителів з’явиться тут.</p>
       </article>
     </section>
 
@@ -502,7 +504,7 @@
       <h2>Календар днів народжень</h2>
       <div id="calendar-controls">
         <button id="prev-month" title="Попередній місяць">◀</button>
-        <span id="month-year" style="font-weight:bold; margin: 0 15px;"></span>
+        <span id="month-year"></span>
         <button id="next-month" title="Наступний місяць">▶</button>
       </div>
       <table id="calendar" border="1" cellpadding="5" cellspacing="0">
@@ -513,7 +515,46 @@
         </thead>
         <tbody id="calendar-body"></tbody>
       </table>
-      <div id="birthday-info" style="margin-top:10px; font-weight:bold;"></div>
+      <div id="birthday-info"></div>
+    </section>
+
+    <section id="students" class="tab-content">
+      <article>
+        <h2>Учні класу</h2>
+        <ul>
+          <li>Бубловський Ростислав</li>
+          <li>Бурма Єгор</li>
+          <li>Васильєва Анастасія</li>
+          <li>Вітренко Дмитро</li>
+          <li>Гребенюк Азалія</li>
+          <li>Гур'янов Владислав</li>
+          <li>Д'яченко Аліна</li>
+          <li>Д'яченко Андрій</li>
+          <li>Дермен Мілана</li>
+          <li>Дігтяр Анна</li>
+          <li>Єременко Аліса</li>
+          <li>Загнойко Ярослав</li>
+          <li>Кіндер Валерія</li>
+          <li>Кладко Микита</li>
+          <li>Коловоротний Валентин</li>
+          <li>Копєйкіна Таїсія</li>
+          <li>Кучугура Демид</li>
+          <li>Любенко Захар</li>
+          <li>Малик Віолета</li>
+          <li>Маяцька Єлизавета</li>
+          <li>Немирич Крістіна</li>
+          <li>Півторак Лев</li>
+          <li>Плювака Вікторія</li>
+          <li>Прокудін Дмитро</li>
+          <li>Соляник Тимур</li>
+          <li>Філатова Єлизавета</li>
+          <li>Цокота Аліса</li>
+          <li>Чуденко Гліб</li>
+          <li>Швидченко Ангеліна</li>
+          <li>Яценко Марина</li>
+        </ul>
+        <p><em>Усього учнів у класі — 30.</em></p>
+      </article>
     </section>
 
     <section id="contact" class="tab-content">
