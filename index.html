@@ -9,6 +9,12 @@
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #f2f2f2;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-theme {
+      background-color: #121212;
+      color: #eee;
     }
     header {
       background-color: #005bbb;
@@ -16,10 +22,16 @@
       padding: 20px;
       text-align: center;
     }
+    body.dark-theme header {
+      background-color: #003366;
+    }
     nav {
       background-color: #ffd500;
       padding: 10px;
       text-align: center;
+    }
+    body.dark-theme nav {
+      background-color: #b38f00;
     }
     nav a {
       margin: 0 10px;
@@ -27,6 +39,9 @@
       color: #000;
       font-weight: bold;
       cursor: pointer;
+    }
+    body.dark-theme nav a {
+      color: #ddd;
     }
     main {
       padding: 20px;
@@ -36,6 +51,11 @@
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       min-height: 400px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-theme main {
+      background-color: #222;
+      color: #eee;
     }
     article {
       margin-bottom: 20px;
@@ -47,6 +67,11 @@
       margin-top: 30px;
       font-size: 14px;
       color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-theme footer {
+      background-color: #222;
+      color: #aaa;
     }
     em {
       font-style: italic;
@@ -70,6 +95,12 @@
       position: relative;
       background-color: #fafafa;
       box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s;
+    }
+    body.dark-theme .news-item {
+      background-color: #333;
+      border-color: #555;
+      box-shadow: 1px 1px 6px rgba(0,0,0,0.8);
     }
     .news-date {
       position: absolute;
@@ -78,6 +109,10 @@
       font-size: 0.75em;
       font-style: italic;
       color: rgba(0, 0, 0, 0.4);
+      transition: color 0.3s;
+    }
+    body.dark-theme .news-date {
+      color: rgba(255, 255, 255, 0.5);
     }
     /* Аналогічна рамка для вкладки Вчителі */
     .teacher-info {
@@ -86,159 +121,111 @@
       padding: 15px 20px;
       background-color: #fafafa;
       box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s;
     }
-    /* Стилі для календаря */
-    #calendar-controls button {
-      padding: 5px 10px;
-      font-size: 16px;
-      cursor: pointer;
+    body.dark-theme .teacher-info {
+      background-color: #333;
+      border-color: #555;
+      box-shadow: 1px 1px 6px rgba(0,0,0,0.8);
     }
+
+    /* Календар */
     #calendar {
-      margin-top: 10px;
-      border-collapse: collapse;
       width: 100%;
-      max-width: 500px;
-      text-align: center;
+      border-collapse: collapse;
+      margin-top: 15px;
+      color: inherit;
     }
     #calendar th, #calendar td {
+      width: 14.28%;
       border: 1px solid #ccc;
+      text-align: center;
       padding: 8px;
-      height: 40px;
-      vertical-align: middle;
-    }
-    #calendar td {
       cursor: default;
       user-select: none;
     }
-    #calendar td.birthday {
-      background-color: #ffd54f;
-      cursor: pointer;
+    body.dark-theme #calendar th, body.dark-theme #calendar td {
+      border-color: #555;
+    }
+    #calendar th {
+      background-color: #ffd500;
+    }
+    body.dark-theme #calendar th {
+      background-color: #b38f00;
+    }
+    #calendar td:hover {
+      background-color: #ffeb3b88;
+    }
+    body.dark-theme #calendar td:hover {
+      background-color: #ffc107aa;
+    }
+    .birthday {
+      background-color: #fff176 !important;
       font-weight: bold;
     }
-    #birthday-info {
+    body.dark-theme .birthday {
+      background-color: #fbc02d !important;
+      color: #222;
+    }
+    #calendar-controls {
+      text-align: center;
       margin-top: 10px;
-      font-style: italic;
-      min-height: 24px;
+    }
+    #calendar-controls button {
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px 10px;
+      margin: 0 10px;
+      border: none;
+      background-color: #005bbb;
+      color: white;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    #calendar-controls button:hover {
+      background-color: #003d80;
+    }
+    body.dark-theme #calendar-controls button {
+      background-color: #003366;
+    }
+    body.dark-theme #calendar-controls button:hover {
+      background-color: #001f4d;
+    }
+    #birthday-info {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Темна/світла тема кнопка */
+    #theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #005bbb;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+    #theme-toggle:hover {
+      background: #003366;
+    }
+    body.dark-theme #theme-toggle {
+      background: #b38f00;
+      color: #222;
+    }
+    body.dark-theme #theme-toggle:hover {
+      background: #7a6400;
     }
   </style>
-  <script>
-    // Функція для перемикання вкладок
-    function openTab(tabName) {
-      const tabs = document.querySelectorAll('.tab-content');
-      tabs.forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.getElementById(tabName).classList.add('active');
-    }
-    // За замовчуванням відкриваємо "Новини класу"
-    window.onload = () => {
-      openTab('news');
-    };
-
-    // Дані з днями народження — місяць-день: імена
-    const birthdays = {
-      "1-2": ["Гур'янов Владислав Євгенійович", "Чуденко Гліб Сергійович"],
-      "1-6": ["Кіндер Валерія Олександрівна"],
-      "1-8": ["Д'яченко Аліна Олександрівна", "Д'яченко Андрій Олександрівич"],
-      "1-11": ["Півторак Лев Олександрович"],
-      "1-15": ["Філатова Єлизавета Олександрівна"],
-      "1-18": ["Загнойко Ярослав Олександрович"],
-      "1-19": ["Дігтяр Анна Сергіївна"],
-      "1-20": ["Єременко Аліса Сергіївна", "Маяцька Єлизавета Денисівна", "Цокота Аліса Миколаївна"],
-      "1-25": ["Соляник Тимур Романович"],
-      "1-26": ["Любенко Захар Олександрович"],
-      "1-27": ["Бурма Єгор Олегович", "Кучугура Демид Русланович", "Немирич Крістіна Віталіївна"],
-      "1-29": ["Дермен Мілана Максимівна", "Малик Віолета Сергіївна"],
-      "2-2": ["Вітренко Дмитро Олександрович", "Гур'янов Владислав Євгенійович", "Чуденко Гліб Сергійович"],
-      "2-3": ["Кладко Микита Максимович"],
-      "2-5": ["Плювака Вікторія Володимирівна"],
-      "2-8": ["Васильєва Анастасія Максимівна", "Швидченко Ангеліна Іванівна"],
-      "2-11": ["Яценко Марина Євгенівна"],
-      "2-18": ["Бубловський Ростислав Максимович"],
-      "2-20": ["Прокудін Дмитро Юрійович"],
-      "2-26": ["Мазур Альона Миколаївна"],
-      "2-27": ["Немирич Крістіна Віталіївна"]
-      // додай інші дати, якщо потрібно
-    };
-
-    let currentYear = new Date().getFullYear();
-    let currentMonth = new Date().getMonth();
-
-    function renderCalendar(year, month) {
-      const calendarBody = document.getElementById('calendar-body');
-      const monthYear = document.getElementById('month-year');
-      const birthdayInfo = document.getElementById('birthday-info');
-      calendarBody.innerHTML = '';
-      birthdayInfo.textContent = '';
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const startDayOfWeek = firstDay.getDay(); // 0-неділя
-      const totalDays = lastDay.getDate();
-
-      // Відображення назви місяця і року
-      monthYear.textContent = firstDay.toLocaleString('uk-UA', { month: 'long', year: 'numeric' });
-
-      let row = document.createElement('tr');
-
-      // Заповнення порожніх клітинок перед першим днем місяця
-      for(let i = 0; i < startDayOfWeek; i++) {
-        let cell = document.createElement('td');
-        cell.innerHTML = '';
-        row.appendChild(cell);
-      }
-
-      for(let day = 1; day <= totalDays; day++) {
-        if(row.children.length === 7) {
-          calendarBody.appendChild(row);
-          row = document.createElement('tr');
-        }
-        let cell = document.createElement('td');
-        cell.textContent = day;
-
-        const key = (month + 1) + '-' + day;
-        if (birthdays[key]) {
-          cell.classList.add('birthday');
-          cell.onclick = () => {
-            birthdayInfo.textContent = `Дні народження: ${birthdays[key].join(', ')}`;
-          };
-        }
-        row.appendChild(cell);
-      }
-
-      // Заповнення порожніх клітинок в кінці тижня
-      while(row.children.length < 7) {
-        let cell = document.createElement('td');
-        cell.innerHTML = '';
-        row.appendChild(cell);
-      }
-      calendarBody.appendChild(row);
-    }
-
-    window.onload = () => {
-      openTab('news');
-      renderCalendar(currentYear, currentMonth);
-    };
-
-    document.getElementById('prev-month').onclick = () => {
-      currentMonth--;
-      if(currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
-      renderCalendar(currentYear, currentMonth);
-    };
-
-    document.getElementById('next-month').onclick = () => {
-      currentMonth++;
-      if(currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
-      renderCalendar(currentYear, currentMonth);
-    };
-  </script>
 </head>
 <body>
+  <button id="theme-toggle" title="Перемкнути тему">Тема</button>
+
   <header>
     <h1>САЙТ 7-А КЛАСУ, ІЗЮМСЬКОГО ЛІЦЕЮ №11</h1>
     <p>Ласкаво просимо до сайту!</p>
@@ -263,7 +250,6 @@
         <p><strong>Дорогі учні спільноти 7-А!</strong><br />
         Нещодавно було створено цей сайт, щоб зробити навчання ще зручнішим. Сподіваємося, що він стане вам у пригоді та допоможе швидко знаходити потрібну інформацію.</p>
       </article>
-      <!-- Тут можна додавати інші новини аналогічно -->
     </section>
 
     <!-- Розклад -->
@@ -335,7 +321,7 @@
           <li>Гребенюк Азалія Сергіївна</li>
           <li>Гур'янов Владислав Євгенійович</li>
           <li>Д'яченко Аліна Олександрівна</li>
-          <li>Д'яченко Андрій Олександрорович</li>
+          <li>Д'яченко Андрій Олександрович</li>
           <li>Дермен Мілана Максимівна</li>
           <li>Дігтяр Анна Сергіївна</li>
           <li>Єременко Аліса Сергіївна</li>
@@ -358,6 +344,7 @@
           <li>Чуденко Гліб Сергійович</li>
           <li>Швидченко Ангеліна Іванівна</li>
           <li>Яценко Марина Євгенівна</li>
+          <p><em>Усього учнів у класі — 30.</em></p>
         </ul>
       </article>
     </section>
@@ -366,11 +353,7 @@
     <section id="contact" class="tab-content">
       <article>
         <h2>Зворотній зв'язок</h2>
-        <p>Напишіть нам через email або телефон, щоб задати питання чи надіслати пропозиції.</p>
-        <ul>
-          <li>Email: example@izyum11.ua</li>
-          <li>Телефон: +380 50 123 45 67</li>
-        </ul>
+        <p>Telegram: <a href="https://t.me/sait_vosmogoA_klas_bot" target="_blank">@sait_vosmogoA_klas_bot</a></p>
       </article>
     </section>
 
@@ -378,9 +361,9 @@
     <section id="birthday-calendar" class="tab-content">
       <h2>Календар днів народжень</h2>
       <div id="calendar-controls">
-        <button id="prev-month">◀</button>
+        <button id="prev-month" title="Попередній місяць">◀</button>
         <span id="month-year" style="font-weight:bold; margin: 0 15px;"></span>
-        <button id="next-month">▶</button>
+        <button id="next-month" title="Наступний місяць">▶</button>
       </div>
       <table id="calendar" border="1" cellpadding="5" cellspacing="0">
         <thead>
@@ -388,16 +371,156 @@
             <th>Нд</th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th>
           </tr>
         </thead>
-        <tbody id="calendar-body">
-          <!-- Календар заповниться тут -->
-        </tbody>
+        <tbody id="calendar-body"></tbody>
       </table>
       <div id="birthday-info"></div>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Ізюмський ліцей №11, 7-А клас</p>
+    <p>© 2025 Сайт 7-А класу Ізюмського ліцею №11</p>
   </footer>
+
+  <script>
+    // Вкладки
+    function openTab(tabName) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+    }
+
+    // Дані днів народжень (місяць - 0, день)
+    const birthdays = {
+      '0-2': ['Копєйкіна Таїсія Андріївна'], // 2 січня
+      '0-26': ['Любенко Захар Олександрович'], // 26 січня
+      '0-18': ['Загнойко Ярослав Олександрович'], // 18 січня
+      '1-20': ['Єременко Аліса Сергіївна'], // 20 лютого
+      '2-3': ['Кладко Микита Максимович'], // 3 березня
+      '3-19': ['Дігтяр Анна Сергіївна', 'Маяцька Єлизавета Денисівна'], // 19, 20 квітня
+      '3-20': ['Маяцька Єлизавета Денисівна'], // 20 квітня
+      '4-6': ['Кіндер Валерія Олександрівна'], // 6 травня
+      '5-2': ['Вітренко Дмитро Олександрович', 'Гур\'янов Владислав Євгенійович'], // 2 червня
+      '5-11': ['Півторак Лев Олександрович'], // 11 червня
+      '6-2': ['Чуденко Гліб Сергійович'], // 2 липня
+      '6-4': ['Коловоротний Валентин Олегович'], // 4 липня
+      '6-5': ['Плювака Вікторія Володимирівна'], // 5 липня
+      '6-20': ['Прокудін Дмитро Юрійович'], // 20 липня
+      '6-30': ['Яценко Марина Євгенівна'], // 30 липня
+      '7-25': ['Соляник Тимур Романович'], // 25 серпня
+      '7-29': ['Малик Віолета Сергіївна'], // 29 серпня
+      '8-8': ['Д\'яченко Аліна Олександрівна', 'Д\'яченко Андрій Олександрович', 'Філатова Єлизавета Олександрівна'], // 8 вересня
+      '9-8': ['Гребенюк Азалія Сергіївна'], // 8 жовтня
+      '9-27': ['Немирич Крістіна Віталіївна'], // 27 жовтня
+      '10-11': ['Швидченко Ангеліна Іванівна'], // 11 листопада
+      '10-30': ['Бубловський Ростислав Максимович'], // 30 листопада
+      '11-27': ['Бурма Єгор Олегович'], // 27 грудня
+    };
+
+    let currentYear, currentMonth;
+
+    function renderCalendar(year, month) {
+      const calendarBody = document.getElementById('calendar-body');
+      calendarBody.innerHTML = '';
+
+      const monthYear = document.getElementById('month-year');
+      const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+      monthYear.textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const firstWeekDay = firstDay.getDay(); // 0 - неділя, 1 - понеділок і тд
+      const daysInMonth = lastDay.getDate();
+
+      let row = document.createElement('tr');
+      // Заповнюємо пусті дні до початку місяця
+      for(let i=0; i<firstWeekDay; i++) {
+        const emptyCell = document.createElement('td');
+        row.appendChild(emptyCell);
+      }
+
+      for(let day=1; day <= daysInMonth; day++) {
+        if(row.children.length === 7) {
+          calendarBody.appendChild(row);
+          row = document.createElement('tr');
+        }
+
+        const cell = document.createElement('td');
+        cell.textContent = day;
+
+        // Позначаємо дні народження
+        const key = `${month}-${day}`;
+        if(birthdays[key]) {
+          cell.classList.add('birthday');
+          cell.title = birthdays[key].join(', ');
+        }
+
+        row.appendChild(cell);
+      }
+
+      // Заповнюємо пусті клітинки наприкінці місяця
+      while(row.children.length < 7) {
+        const emptyCell = document.createElement('td');
+        row.appendChild(emptyCell);
+      }
+      calendarBody.appendChild(row);
+
+      // Показати імена народжень у місяці
+      showBirthdaysForMonth(month);
+    }
+
+    function showBirthdaysForMonth(month) {
+      const info = document.getElementById('birthday-info');
+      let people = [];
+      for(let key in birthdays) {
+        if(key.startsWith(month + '-')) {
+          people = people.concat(birthdays[key]);
+        }
+      }
+      if(people.length === 0) {
+        info.textContent = 'У цьому місяці днів народжень немає.';
+      } else {
+        info.textContent = `У цьому місяці святкують: ${people.join(', ')}`;
+      }
+    }
+
+    window.onload = () => {
+      openTab('news');
+
+      // Тема за замовчуванням - якщо в системі темна, ставимо темну
+      if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-theme');
+      }
+
+      // Перемикач теми
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.onclick = () => {
+        document.body.classList.toggle('dark-theme');
+      };
+
+      // Ініціалізація календаря
+      const now = new Date();
+      currentYear = now.getFullYear();
+      currentMonth = now.getMonth();
+      renderCalendar(currentYear, currentMonth);
+
+      // Обробники кнопок місяців
+      document.getElementById('prev-month').onclick = () => {
+        currentMonth--;
+        if(currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        renderCalendar(currentYear, currentMonth);
+      };
+      document.getElementById('next-month').onclick = () => {
+        currentMonth++;
+        if(currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        renderCalendar(currentYear, currentMonth);
+      };
+    };
+  </script>
 </body>
 </html>
