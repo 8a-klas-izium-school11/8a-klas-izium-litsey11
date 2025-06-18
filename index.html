@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Сайт 7-А класу</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f2f2f2;
+    }
+    header {
+      background-color: #005bbb;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background-color: #ffd500;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      min-height: 400px;
+    }
+    article {
+      margin-bottom: 20px;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #ddd;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #333;
+    }
+    em {
+      font-style: italic;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    /* Приховуємо всі вкладки крім активної */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Стилі для новин */
+    .news-item {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px 20px 20px 20px;
+      margin-bottom: 15px;
+      position: relative;
+      background-color: #fafafa;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+    }
+    .news-date {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 0.75em;
+      font-style: italic;
+      color: rgba(0, 0, 0, 0.4);
+    }
+    /* Аналогічна рамка для вкладки Вчителі */
+    .teacher-info {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px 20px;
+      background-color: #fafafa;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+    }
+  </style>
+  <script>
+    // Функція для перемикання вкладок
+    function openTab(tabName) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(tabName).classList.add('active');
+    }
+    // За замовчуванням відкриваємо "Новини класу"
+    window.onload = () => {
+      openTab('news');
+    };
+  </script>
+</head>
+<body>
+  <header>
+    <h1>САЙТ 7-А КЛАСУ, ІЗЮМСЬКОГО ЛІЦЕЮ №11</h1>
+    <p>Ласкаво просимо до сайту!</p>
+  </header>
+
+  <nav>
+    <a onclick="openTab('news')">НОВИНИ КЛАСУ</a>
+    <a onclick="openTab('schedule')">РОЗКЛАД</a>
+    <a onclick="openTab('teachers')">ВЧИТЕЛІ</a>
+    <a onclick="openTab('birthdays')">ДНІ НАРОДЖЕННЯ</a>
+    <a onclick="openTab('students')">УЧНІ КЛАСУ</a>
+    <a onclick="openTab('contact')">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
+  </nav>
+
+  <main>
+    <!-- Новини класу -->
+    <section id="news" class="tab-content">
+      <article class="news-item">
+        <div class="news-date">18 червня в 12:00</div>
+        <h2>Вітаємо на сайті 7-А класу!</h2>
+        <p><strong>Дорогі учні спільноти 7-А!</strong><br />
+        Нещодавно було створено цей сайт, щоб зробити навчання ще зручнішим. Сподіваємося, що він стане вам у пригоді та допоможе швидко знаходити потрібну інформацію.</p>
+      </article>
+      <!-- Тут можна додавати інші новини аналогічно -->
+    </section>
+
+    <!-- Розклад -->
+    <section id="schedule" class="tab-content">
+      <article>
+        <h2>Розклад уроків</h2>
+        <p>На даний час літніх канікул розкладу нема.</p>
+      </article>
+    </section>
+
+    <!-- Вчителі -->
+    <section id="teachers" class="tab-content">
+      <article class="teacher-info">
+        <h2>Вчителі</h2>
+        <p>Мазур Альона Миколаївна - класний керівник</p>
+        <p><em>(На даний час літніх канікул невідомо, хто ще стане вчителем у нашому класі)</em></p>
+      </article>
+    </section>
+
+    <!-- Дні народження -->
+    <section id="birthdays" class="tab-content">
+      <article>
+        <h2>Дні народження учнів</h2>
+        <ul>
+          <li><strong>Мазур Альона Миколаївна</strong> - 26 лютого</li>
+          <li><strong>Бубловський Ростислав Максимович</strong> - 30 листопада</li>
+          <li><strong>Бурма Єгор Олегович</strong> - 27 грудня</li>
+          <li><strong>Васильєва Анастасія Максимівна</strong> - 8 листопада</li>
+          <li><strong>Вітренко Дмитро Олександрович</strong> - 2 червня</li>
+          <li><strong>Гребенюк Азалія Сергіївна</strong> - 8 жовтня</li>
+          <li><strong>Гур'янов Владислав Євгенійович</strong> - 2 червня</li>
+          <li><strong>Дермен Мілана Максимівна</strong> - 29 липня</li>
+          <li><strong>Дігтяр Анна Сергіївна</strong> - 19 квітня</li>
+          <li><strong>Д'яченко Аліна Олександрівна</strong> - 8 вересня</li>
+          <li><strong>Д'яченко Андрій Олександрович</strong> - 8 вересня</li>
+          <li><strong>Єременко Аліса Сергіївна</strong> - 20 лютого</li>
+          <li><strong>Загнойко Ярослав Олександрович</strong> - 18 січня</li>
+          <li><strong>Кіндер Валерія Олександрівна</strong> - 6 травня</li>
+          <li><strong>Кладко Микита Максимович</strong> - 3 березня</li>
+          <li><strong>Коловоротний Валентин Олегович</strong> - 4 липня</li>
+          <li><strong>Копєйкіна Таїсія Андріївна</strong> - 2 січня</li>
+          <li><strong>Кучугура Демид Русланович</strong> - 27 квітня</li>
+          <li><strong>Любенко Захар Олександрович</strong> - 26 січня</li>
+          <li><strong>Малик Віолета Сергіївна</strong> - 29 серпня</li>
+          <li><strong>Маяцька Єлизавета Денисівна</strong> - 20 квітня</li>
+          <li><strong>Немирич Крістіна Віталіївна</strong> - 27 жовтня</li>
+          <li><strong>Півторак Лев Олександрович</strong> - 11 червня</li>
+          <li><strong>Плювака Вікторія Володимирівна</strong> - 5 липня</li>
+          <li><strong>Прокудін Дмитро Юрійович</strong> - 20 липня</li>
+          <li><strong>Соляник Тимур Романович</strong> - 25 серпня</li>
+          <li><strong>Філатова Єлизавета Олександрівна</strong> - 15 вересня</li>
+          <li><strong>Цокота Аліса Миколаївна</strong> - 20 вересня</li>
+          <li><strong>Чуденко Гліб Сергійович</strong> - 2 липня</li>
+          <li><strong>Швидченко Ангеліна Іванівна</strong> - 11 листопада</li>
+          <li><strong>Яценко Марина Євгенівна</strong> - 30 липня</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Учні класу -->
+    <section id="students" class="tab-content">
+      <article>
+        <h2>Учні класу</h2>
+        <ul>
+          <li>Бубловський Ростислав Максимович</li>
+          <li>Бурма Єгор Олегович</li>
+          <li>Васильєва Анастасія Максимівна</li>
+          <li>Вітренко Дмитро Олександрович</li>
+          <li>Гребенюк Азалія Сергіївна</li>
+          <li>Гур'янов Владислав Євгенійович</li>
+          <li>Д'яченко Аліна Олександрівна</li>
+          <li>Д'яченко Андрій Олександрович</li>
+          <li>Дермен Мілана Максимівна</li>
+          <li>Дігтяр Анна Сергіївна</li>
+          <li>Єременко Аліса Сергіївна</li>
+          <li>Загнойко Ярослав Олександрович</li>
+          <li>Кіндер Валерія Олександрівна</li>
+          <li>Кладко Микита Максимович</li>
+          <li>Коловоротний Валентин Олегович</li>
+          <li>Копєйкіна Таїсія Андріївна</li>
+          <li>Кучугура Демид Русланович</li>
+          <li>Любенко Захар Олександрович</li>
+          <li>Малик Віолета Сергіївна</li>
+          <li>Маяцька Єлизавета Денисівна</li>
+          <li>Немирич Крістіна Віталіївна</li>
+          <li>Півторак Лев Олександрович</li>
+          <li>Плювака Вікторія Володимирівна</li>
+          <li>Прокудін Дмитро Юрійович</li>
+          <li>Соляник Тимур Романович</li>
+          <li>Філатова Єлизавета Олександрівна</li>
+          <li>Цокота Аліса Миколаївна</li>
+          <li>Чуденко Гліб Сергійович</li>
+          <li>Швидченко Ангеліна Іванівна</li>
+          <li>Яценко Марина Євгенівна</li>
+          <p><em>Усього учнів у класі — 31.</em></p>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Зворотній зв'язок -->
+    <section id="contact" class="tab-content">
+      <article>
+        <h2>Зворотній зв'язок</h2>
+        <p>Telegram: <a href="https://t.me/sait_vosmogoA_klas_bot" target="_blank">@sait_vosmogoA_klas_bot</a></p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Сайт 7-А класу Ізюмського ліцею №11</p>
+  </footer>
+</body>
+</html>
