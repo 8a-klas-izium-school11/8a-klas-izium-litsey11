@@ -131,6 +131,7 @@
       color: #aaa;
     }
 
+    /* Світла тема */
     body.light-theme {
       background-color: #f2f2f2;
       color: #000;
@@ -163,6 +164,7 @@
       color: #333;
     }
 
+    /* CSS для підтримки темної теми за системою, лише якщо НЕ встановлені класи */
     @media (prefers-color-scheme: dark) {
       body:not(.dark-theme):not(.light-theme) {
         background-color: #121212;
@@ -197,6 +199,7 @@
       }
     }
 
+    /* Кнопка перемикання теми */
     .theme-toggle {
       position: fixed;
       top: 10px;
@@ -215,303 +218,74 @@
       background-color: #003a75;
     }
 
-    /* --- СТИЛІ КАЛЕНДАРЯ --- */
-    .calendar {
-      max-width: 600px;
-      margin: 20px auto 0 auto;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      background-color: #fafafa;
-      box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
-      user-select: none;
+    /* Календар днів народжень */
+    #calendar {
+      width: 100%;
+      max-width: 700px;
+      margin: 20px auto;
+      border-collapse: collapse;
     }
-    .calendar.dark-theme {
-      background-color: #292929;
-      border-color: #444;
-      color: #ddd;
-    }
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    #calendar caption {
+      font-weight: bold;
+      font-size: 1.2em;
       margin-bottom: 10px;
     }
-    .calendar-header button {
+    #calendar th, #calendar td {
+      border: 1px solid #ccc;
+      width: 14.28%;
+      vertical-align: top;
+      padding: 5px;
+      height: 80px;
+      position: relative;
+      cursor: default;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #calendar th {
+      background-color: #ffd500;
+      color: #000;
+      text-align: center;
+    }
+    body.dark-theme #calendar th {
+      background-color: #b38f00;
+      color: #fff;
+    }
+    #calendar td:hover {
+      background-color: #f0f8ff;
+    }
+    body.dark-theme #calendar td:hover {
+      background-color: #444;
+    }
+    .birthday {
+      font-size: 0.75em;
+      color: #d6336c;
+      margin-top: 3px;
+      display: block;
+    }
+    body.dark-theme .birthday {
+      color: #ff79c6;
+    }
+
+    /* Кнопки навігації календарем */
+    .calendar-nav {
+      text-align: center;
+      margin: 10px 0 20px 0;
+    }
+    .calendar-nav button {
       background-color: #005bbb;
-      color: white;
       border: none;
-      border-radius: 5px;
+      color: white;
       padding: 6px 12px;
+      margin: 0 10px;
       cursor: pointer;
+      border-radius: 5px;
       font-weight: bold;
       transition: background-color 0.3s;
     }
-    .calendar-header button:hover {
+    .calendar-nav button:hover {
       background-color: #003a75;
     }
-    .calendar-header .month-year {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
-    table.calendar-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-    table.calendar-table th,
-    table.calendar-table td {
-      border: 1px solid #ccc;
-      padding: 10px 5px;
-      vertical-align: top;
-      height: 80px;
-      text-align: right;
-      position: relative;
-      cursor: default;
-      word-wrap: break-word;
-    }
-    table.calendar-table th {
-      background-color: #005bbb;
-      color: white;
-      font-weight: bold;
-      user-select: none;
-    }
-    table.calendar-table td.birthday {
-      background-color: #ffd500a6;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    table.calendar-table td.birthday:hover {
-      background-color: #ffca008c;
-    }
-    table.calendar-table td .birthday-names {
-      position: absolute;
-      left: 5px;
-      top: 5px;
-      font-size: 0.75em;
-      color: #333;
-      max-height: 60px;
-      overflow-y: auto;
-      white-space: normal;
-    }
-    .calendar.dark-theme table.calendar-table th {
-      background-color: #b38f00;
-      color: #222;
-    }
-    .calendar.dark-theme table.calendar-table td {
-      border-color: #444;
-      color: #ddd;
-    }
-    .calendar.dark-theme table.calendar-table td.birthday {
-      background-color: #b38f0090;
-      color: #222;
-    }
-    .calendar.dark-theme table.calendar-table td.birthday:hover {
-      background-color: #d1ad0066;
-    }
-    .calendar.dark-theme table.calendar-table td .birthday-names {
-      color: #ddd;
-    }
+
   </style>
-  <script>
-    // Функції для темної/світлої теми (як були у тебе)
-    function toggleTheme() {
-      const body = document.body;
-      const btn = document.querySelector('.theme-toggle');
-      if (body.classList.contains('dark-theme')) {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        btn.textContent = '🌙 Темна тема';
-        localStorage.setItem('theme', 'light');
-      } else {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        btn.textContent = '☀️ Світла тема';
-        localStorage.setItem('theme', 'dark');
-      }
-      renderCalendar(); // обновлюємо календар для теми
-    }
-
-    function openTab(tabName) {
-      const tabs = document.querySelectorAll('.tab-content');
-      tabs.forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabName).classList.add('active');
-    }
-
-    // Дні народжень у форматі "ММ-ДД": ["Ім'я1", "Ім'я2", ...]
-    const birthdays = {
-      "01-02": ["Копєйкіна Таїсія Андріївна"],
-      "01-18": ["Загнойко Ярослав Олександрович"],
-      "01-26": ["Любенко Захар Олександрович"],
-      "02-20": ["Єременко Аліса Сергіївна"],
-      "02-26": ["Мазур Альона Миколаївна"],
-      "03-03": ["Кладко Микита Максимович"],
-      "04-19": ["Дігтяр Анна Сергіївна"],
-      "04-20": ["Маяцька Єлизавета Денисівна"],
-      "04-27": ["Кучугура Демид Русланович"],
-      "05-06": ["Кіндер Валерія Олександрівна"],
-      "06-02": ["Вітренко Дмитро Олександрович", "Гур'янов Владислав Євгенійович"],
-      "06-11": ["Півторак Лев Олександрович"],
-      "07-02": ["Чуденко Гліб Сергійович"],
-      "07-04": ["Коловоротний Валентин Олегович"],
-      "07-05": ["Плювака Вікторія Володимирівна"],
-      "07-20": ["Прокудін Дмитро Юрійович"],
-      "07-29": ["Дермен Мілана Максимівна", "Яценко Марина Євгенівна"],
-      "08-25": ["Соляник Тимур Романович"],
-      "08-29": ["Малик Віолета Сергіївна"],
-      "09-08": ["Д'яченко Аліна Олександрівна", "Д'яченко Андрій Олександрович"],
-      "09-15": ["Філатова Єлизавета Олександрівна"],
-      "09-20": ["Цокота Аліса Миколаївна"],
-      "10-08": ["Гребенюк Азалія Сергіївна"],
-      "10-27": ["Немирич Крістіна Віталіївна"],
-      "11-08": ["Васильєва Анастасія Максимівна"],
-      "11-11": ["Швидченко Ангеліна Іванівна"],
-      "11-30": ["Бубловський Ростислав Максимович"],
-      "12-27": ["Бурма Єгор Олегович"]
-    };
-
-    let currentYear, currentMonth;
-
-    function renderCalendar() {
-      const calendar = document.getElementById('calendar');
-      const monthYear = document.getElementById('month-year');
-      const today = new Date();
-
-      if (!currentYear || !currentMonth) {
-        currentYear = today.getFullYear();
-        currentMonth = today.getMonth();
-      }
-
-      // Очистити календар
-      calendar.innerHTML = '';
-
-      // Встановити назву місяця
-      const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
-      monthYear.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-
-      // Перший день місяця
-      const firstDay = new Date(currentYear, currentMonth, 1);
-      // День тижня першого дня (0=Неділя, 1=Понеділок...)
-      let startDay = firstDay.getDay();
-      // Зробимо понеділок першим днем тижня (змінимо 0 (неділю) на 7)
-      if (startDay === 0) startDay = 7;
-
-      // Кількість днів у місяці
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-      // Створюємо таблицю
-      const table = document.createElement('table');
-      table.className = 'calendar-table';
-
-      // Заголовок з днями тижня
-      const headerRow = document.createElement('tr');
-      const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
-      weekDays.forEach(day => {
-        const th = document.createElement('th');
-        th.textContent = day;
-        headerRow.appendChild(th);
-      });
-      table.appendChild(headerRow);
-
-      // Заповнення днів
-      let date = 1;
-      for (let i = 0; i < 6; i++) { // максимум 6 тижнів у місяці
-        const row = document.createElement('tr');
-
-        for (let j = 1; j <= 7; j++) {
-          const cell = document.createElement('td');
-
-          if (i === 0 && j < startDay) {
-            // Порожні клітинки перед початком місяця
-            cell.textContent = '';
-          } else if (date > daysInMonth) {
-            cell.textContent = '';
-          } else {
-            // Додаємо дату
-            cell.textContent = date;
-
-            // Формат для пошуку в birthdays "ММ-ДД"
-            const key = (currentMonth + 1).toString().padStart(2, '0') + '-' + date.toString().padStart(2, '0');
-
-            if (birthdays[key]) {
-              cell.classList.add('birthday');
-
-              // Створюємо блок із іменами
-              const namesDiv = document.createElement('div');
-              namesDiv.className = 'birthday-names';
-              namesDiv.innerHTML = birthdays[key].join('<br>');
-              cell.appendChild(namesDiv);
-            }
-            date++;
-          }
-          row.appendChild(cell);
-        }
-        table.appendChild(row);
-      }
-
-      calendar.appendChild(table);
-
-      // Оновити теми календаря
-      const calendarDiv = document.querySelector('.calendar');
-      if (document.body.classList.contains('dark-theme')) {
-        calendarDiv.classList.add('dark-theme');
-      } else {
-        calendarDiv.classList.remove('dark-theme');
-      }
-    }
-
-    function prevMonth() {
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
-      renderCalendar();
-    }
-
-    function nextMonth() {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
-      renderCalendar();
-    }
-
-    window.onload = () => {
-      // Відкриваємо новини за замовчуванням
-      openTab('news');
-
-      // Тема
-      const btn = document.querySelector('.theme-toggle');
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        if (savedTheme === 'dark') {
-          document.body.classList.add('dark-theme');
-          document.body.classList.remove('light-theme');
-          btn.textContent = '☀️ Світла тема';
-        } else {
-          document.body.classList.add('light-theme');
-          document.body.classList.remove('dark-theme');
-          btn.textContent = '🌙 Темна тема';
-        }
-      } else {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.body.classList.add('dark-theme');
-          document.body.classList.remove('light-theme');
-          btn.textContent = '☀️ Світла тема';
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.body.classList.add('light-theme');
-          document.body.classList.remove('dark-theme');
-          btn.textContent = '🌙 Темна тема';
-          localStorage.setItem('theme', 'light');
-        }
-      }
-
-      renderCalendar();
-    };
-  </script>
 </head>
 <body>
   <button class="theme-toggle" onclick="toggleTheme()">🌙 Темна тема</button>
@@ -557,15 +331,26 @@
 
     <section id="birthdays" class="tab-content">
       <article>
-        <h2>Дні народження учнів</h2>
-        <div class="calendar">
-          <div class="calendar-header">
-            <button onclick="prevMonth()">&#9664; Попередній</button>
-            <div id="month-year" class="month-year"></div>
-            <button onclick="nextMonth()">Наступний &#9654;</button>
-          </div>
-          <div id="calendar"></div>
+        <h2>Календар днів народжень</h2>
+        <div class="calendar-nav">
+          <button onclick="prevMonth()">&lt; Попередній місяць</button>
+          <span id="monthYear"></span>
+          <button onclick="nextMonth()">Наступний місяць &gt;</button>
         </div>
+        <table id="calendar" aria-label="Календар днів народжень">
+          <thead>
+            <tr>
+              <th>Пн</th>
+              <th>Вт</th>
+              <th>Ср</th>
+              <th>Чт</th>
+              <th>Пт</th>
+              <th>Сб</th>
+              <th>Нд</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
       </article>
     </section>
 
@@ -619,5 +404,168 @@
   <footer>
     © 2025 Сайт 7-А класу, Ізюмський ліцей №11
   </footer>
+
+<script>
+  const birthdays = {
+    '1-2': ['Вітренко Дмитро Олександрович', "Гур'янов Владислав Євгенійович", "Чуденко Гліб Сергійович"],
+    '1-6': ['Копєйкіна Таїсія Андріївна'],
+    '1-18': ['Загнойко Ярослав Олександрович'],
+    '1-26': ['Любенко Захар Олександрович'],
+
+    '2-20': ['Єременко Аліса Сергіївна'],
+    '2-26': ['Мазур Альона Миколаївна'],
+
+    '3-3': ['Кладко Микита Максимович'],
+
+    '4-19': ['Дігтяр Анна Сергіївна'],
+    '4-20': ['Маяцька Єлизавета Денисівна'],
+    '4-27': ['Кучугура Демид Русланович'],
+
+    '5-6': ['Кіндер Валерія Олександрівна'],
+
+    '6-11': ['Півторак Лев Олександрович'],
+
+    '7-2': ['Плювака Вікторія Володимирівна'],
+    '7-4': ['Коловоротний Валентин Олегович'],
+    '7-11': ['Швидченко Ангеліна Іванівна'],
+    '7-20': ['Прокудін Дмитро Юрійович'],
+    '7-29': ['Дермен Мілана Максимівна'],
+    '7-30': ['Яценко Марина Євгенівна'],
+
+    '8-25': ['Соляник Тимур Романович'],
+    '8-29': ['Малик Віолета Сергіївна'],
+
+    '9-8': ["Д'яченко Аліна Олександрівна", "Д'яченко Андрій Олександрович"],
+    '9-15': ['Філатова Єлизавета Олександрівна'],
+    '9-20': ['Цокота Аліса Миколаївна'],
+
+    '10-8': ['Гребенюк Азалія Сергіївна'],
+    '10-27': ['Немирич Крістіна Віталіївна'],
+
+    '11-8': ['Васильєва Анастасія Максимівна'],
+    '11-11': ['Яценко Марина Євгенівна'],
+    '11-30': ['Бубловський Ростислав Максимович'],
+
+    '12-27': ['Бурма Єгор Олегович'],
+  };
+
+  let currentDate = new Date();
+
+  function openTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+  }
+
+  function renderCalendar() {
+    const calendarBody = document.getElementById('calendarBody');
+    calendarBody.innerHTML = '';
+
+    const monthYear = document.getElementById('monthYear');
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const monthNames = [
+      'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+      'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+    ];
+    monthYear.textContent = `${monthNames[month]} ${year}`;
+
+    // Перший день місяця (номер дня тижня, понеділок = 1, неділя = 7)
+    const firstDay = new Date(year, month, 1).getDay();
+    // Коригуємо для понеділка як першого дня тижня
+    const startDay = firstDay === 0 ? 7 : firstDay;
+
+    // Кількість днів у місяці
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let dateNum = 1 - (startDay - 1);
+    for (let week = 0; week < 6; week++) {
+      const tr = document.createElement('tr');
+      for (let day = 1; day <= 7; day++) {
+        const td = document.createElement('td');
+
+        if (dateNum > 0 && dateNum <= daysInMonth) {
+          td.textContent = dateNum;
+
+          // Перевірка на дні народжень (ключ - "місяць-день")
+          const key = `${month + 1}-${dateNum}`;
+          if (birthdays[key]) {
+            birthdays[key].forEach(name => {
+              const span = document.createElement('span');
+              span.classList.add('birthday');
+              span.textContent = name;
+              td.appendChild(span);
+            });
+          }
+        }
+
+        tr.appendChild(td);
+        dateNum++;
+      }
+      calendarBody.appendChild(tr);
+      if (dateNum > daysInMonth) break;
+    }
+  }
+
+  function prevMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+  }
+
+  function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  }
+
+  function toggleTheme() {
+    const body = document.body;
+    const btn = document.querySelector('.theme-toggle');
+    if (body.classList.contains('dark-theme')) {
+      body.classList.remove('dark-theme');
+      body.classList.add('light-theme');
+      btn.textContent = '🌙 Темна тема';
+      localStorage.setItem('theme', 'light');
+    } else {
+      body.classList.remove('light-theme');
+      body.classList.add('dark-theme');
+      btn.textContent = '☀️ Світла тема';
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
+  window.onload = () => {
+    openTab('news');
+
+    // Встановлюємо тему за збереженням або системними налаштуваннями
+    const btn = document.querySelector('.theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+        btn.textContent = '☀️ Світла тема';
+      } else {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('dark-theme');
+        btn.textContent = '🌙 Темна тема';
+      }
+    } else {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+        btn.textContent = '☀️ Світла тема';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('dark-theme');
+        btn.textContent = '🌙 Темна тема';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    renderCalendar();
+  };
+</script>
 </body>
 </html>
