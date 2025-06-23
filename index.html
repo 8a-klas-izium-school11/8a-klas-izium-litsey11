@@ -324,14 +324,58 @@ body.dark-theme .birthday {
     <p>Ласкаво просимо до сайту!</p>
   </header>
 
-  <nav>
-    <a onclick="openTab('news')">НОВИНИ КЛАСУ</a>
-    <a onclick="openTab('schedule')">РОЗКЛАД</a>
-    <a onclick="openTab('teachers')">ВЧИТЕЛІ</a>
-    <a onclick="openTab('birthdays')">ДНІ НАРОДЖЕННЯ</a>
-    <a onclick="openTab('students')">УЧНІ КЛАСУ</a>
-    <a onclick="openTab('contact')">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
-  </nav>
+<nav>
+  <a href="#" class="tab-link active" data-tab="news">НОВИНИ КЛАСУ</a>
+  <a href="#" class="tab-link" data-tab="schedule">РОЗКЛАД</a>
+  <a href="#" class="tab-link" data-tab="teachers">ВЧИТЕЛІ</a>
+  <a href="#" class="tab-link" data-tab="birthdays">ДНІ НАРОДЖЕННЯ</a>
+  <a href="#" class="tab-link" data-tab="students">УЧНІ КЛАСУ</a>
+  <a href="#" class="tab-link" data-tab="contact">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
+</nav>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-link');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.preventDefault();
+
+      // Відключити активність у всіх вкладках меню
+      tabs.forEach(t => t.classList.remove('active'));
+      // Відключити всі вмісти
+      contents.forEach(c => c.classList.remove('active'));
+
+      // Включити активність у клікнутій вкладці
+      tab.classList.add('active');
+      const activeTab = tab.getAttribute('data-tab');
+      document.getElementById(activeTab).classList.add('active');
+    });
+  });
+</script>
+
+<style>
+  nav a {
+    cursor: pointer;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+    margin: 0 5px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav a.active {
+    border-bottom: 2px solid #005bbb;
+    color: #005bbb;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+</style>
 
   <main>
     <section id="news" class="tab-content">
